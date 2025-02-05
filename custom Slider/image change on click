@@ -1,0 +1,38 @@
+//=====Images change on color swatches=====
+
+<script>
+	$(document).ready(function () {
+		function updateSelectedImage() {
+			let selectedColor = $('input[name="Färg"]:checked').val();
+			$('.custom-img-metafield').hide();
+			$('.custom-img-metafield').each(function () {
+				if ($(this).data('variant') === selectedColor) {
+					$(this).show();
+             var mainImg = $(this).find('img').first().attr('src');
+			 // console.log(mainImg);
+			 $('.product__media.media.media--transparent img').attr('srcset',mainImg)
+				}
+			});
+		}
+		updateSelectedImage();
+		$('input[name="Färg"]').change(updateSelectedImage);
+	});
+
+</script>
+//===End Here====
+
+//====Image slider by Css==== 
+$(document).ready(function() {
+    var currentIndex = 0;
+    $('.next').on('click', function() {
+        currentIndex = (currentIndex + 1) % $(this).parent().find('.my-slider .slide-box').length;
+        var $activeImage = $(this).parent().find('.my-slider .slide-box').eq(currentIndex);
+        $activeImage[0].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+    });
+    $('.prev').on('click', function() {
+        currentIndex = (currentIndex - 1 )  % $(this).parent().find('.my-slider .slide-box').length;
+        var $activeImage = $(this).parent().find('.my-slider .slide-box').eq(currentIndex);
+        $activeImage[0].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+    });
+});
+//====End Here===
