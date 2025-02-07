@@ -36,3 +36,42 @@ $(document).ready(function() {
     });
 });
 //====End Here===
+//Different product from color variantion===
+      <div class="cust-collection page-width">
+                                      {% assign has_variants = false %} <!-- Flag to check if any variant is displayed -->
+                                      {% for option in product.options_with_values %}
+                                        {% if option.name == 'Color' %}
+                                          {%- for value in option.values -%}
+                                            {% assign variant = product.variants | where: "option2", value | first %}
+                                            {% if variant.option2 %}
+                                              {% assign has_variants = true %} <!-- Mark that at least one variant is shown -->
+                                              <div class="cust-product">
+                                                <a href="{{ variant.url }}">
+                                                  <div class="cust-product-image">
+                                                    <img src="{{ variant.featured_image.src | img_url : 'master' }}" class="variant-image">
+                                                    <div class="cust-tag"></div>
+                                                  </div>
+                                                  <div class="cust-title">
+                                                    {{ product.title }} - {{ variant.option2 }}
+                                                  </div>
+                                                  <div>
+                                                    <div class="custom-price-section">
+                                                      <div class="cust-compare-price">
+                                                        {{ variant.compare_at_price | money }}
+                                                      </div>
+                                                      <div class="cust-price">
+                                                        {{ variant.price | money }}
+                                                      </div>
+                                                    </div>
+                                                  </div>
+                                                </a>
+                                              </div>
+                                            {% endif %}
+                                          {% endfor %}
+                                        {% endif %}
+                                      {% endfor %}
+                                      <!-- Render the main product only if no variants were shown -->
+                                      {% unless has_variants %}
+                                        {%- render 'product-card', product_card_product: product -%}
+                                      {% endunless %}
+                                    </div>
