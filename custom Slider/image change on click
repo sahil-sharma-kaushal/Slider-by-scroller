@@ -36,7 +36,7 @@ $(document).ready(function() {
     });
 });
 //====End Here===
-//Different product from color variantion===
+//=========Different product from color variantion=========
       <div class="cust-collection page-width">
                                       {% assign has_variants = false %} <!-- Flag to check if any variant is displayed -->
                                       {% for option in product.options_with_values %}
@@ -75,3 +75,22 @@ $(document).ready(function() {
                                         {%- render 'product-card', product_card_product: product -%}
                                       {% endunless %}
                                     </div>
+
+
+======One video at a time====
+var videos = document.querySelectorAll('video');
+for(var i=0; i<videos.length; i++)
+   videos[i].addEventListener('play', function(){pauseAll(this)}, true);
+
+
+function pauseAll(elem){
+	for(var i=0; i<videos.length; i++){
+		//Is this the one we want to play?
+		if(videos[i] == elem) continue;
+		//Have we already played it && is it already paused?
+		if(videos[i].played.length > 0 && !videos[i].paused){
+		// Then pause it now
+		  videos[i].pause();
+		}
+	}
+  }
