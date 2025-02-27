@@ -77,7 +77,7 @@ $(document).ready(function() {
                                     </div>
 
 
-======One video at a time====
+//======One video at a time====
 var videos = document.querySelectorAll('video');
 for(var i=0; i<videos.length; i++)
    videos[i].addEventListener('play', function(){pauseAll(this)}, true);
@@ -94,3 +94,52 @@ function pauseAll(elem){
 		}
 	}
   }
+//=====CUSTOM ADD TO CART SHOW NOTIFICATION BY AJAX======
+  $(document).ready(function() {
+    $('.add-to-cart').click(function() {
+      $()
+      var varId = $(this).data('var-id');
+      var qty = 1;
+              $.ajax({
+            type: "POST",
+            url: "/cart/add.js",
+            data: {
+                "id": varId,
+                "quantity": qty
+            },
+            dataType: "json",
+            success: function(cart) {
+              $('#cart-notification').addClass("active");
+              $('.cart-notification-product__name').html(cart.product_title);
+              $('.cart-notification-product__image img').attr("src", cart.image);
+              setTimeout (function(){
+                  $.getJSON('/cart.js', function(cartData) {
+                    // console.log(cart);
+                    $('#cart-icon-bubble .cart-count-bubble span').html(cartData.item_count);
+                  });
+               },100);
+                   		$.ajax({
+                url: '/?id=cart-notification',
+                type: 'GET',
+                dataType: 'html',
+                success: function(carthtml) {
+                  // Find the HTML content inside #custom-cart-notification
+                  var abc = $(carthtml).find('#custom-cart-notification').html();
+                  var cartImage = cart.image;
+                  var productTitle = cart.product_title;
+                  $('.cart-notification-product').html(
+                    '<div><img src="' + cartImage + '&amp;width=140" alt="" width="70" height="70" loading="lazy"></div>' +
+                    '<div><h3 class="cart-notification-product__name h4">' + productTitle + '</h3>' +
+                    '<dl></dl></div>'
+                  );
+                }
+              });
+                // window.location.href = "/cart";
+            },
+            error: function(xhr, status, error) {
+                console.log("Error adding item to cart:", error);
+                console.log("Response:", xhr.responseText);
+            }
+        });
+    });
+  });
