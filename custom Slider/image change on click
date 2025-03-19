@@ -143,3 +143,57 @@ function pauseAll(elem){
         });
     });
   });
+======CART DRAWER UPDATE=====
+<script>
+$("#custom_add_to_cart").click(function(event) {
+  event.preventDefault();
+  var id = $("#product_id").val();
+  var qty = $("#quantity").val();
+  $.ajax({
+    type: 'POST',
+    url: '/cart/add.js',
+    cache: false,
+    data: {
+      "id": id,
+      "quantity": qty,
+    },
+    dataType: 'json',
+    success: function(data) {
+      $.ajax({
+        url: '/?section_id=cart-drawer',
+        type: 'GET',
+        dataType: 'html',
+        success: function(carthtml) {
+          $.ajax({
+            	type: 'GET',
+            	url: '/cart.json',
+            	dataType: 'jsonp',
+            	success: function(data) {
+                    if(data.item_count == 1){
+                      var mtk='<div class="cart-count-bubble"><span aria-hidden="true">'+data.item_count+'</span><span class="visually-hidden">'+data.item_count+' item</span></div>';
+                      $('a#cart-icon-bubble').append(mtk);
+                    }else{
+            		$(".cart-count-bubble span:nth-child(1)").text(data.item_count);
+                    }
+            	}
+            });
+          $("cart-drawer.drawer").addClass("animate");
+          $("body.gradient").addClass("overflow-hidden");
+          $(".drawer").addClass("active");
+          if ($("cart-drawer.drawer").hasClass('is-empty')) {
+            $('cart-drawer').html($(carthtml).find('cart-drawer').html());
+            $("cart-drawer.is-empty .drawer__header").css("display", "block");
+            $("cart-drawer.is-empty .drawer__footer").css("display", "block");
+            $("cart-drawer.is-empty .cart__contents").css("display", "block");
+            $("cart-drawer.drawer").removeClass('is-empty');
+            $("#CartDrawer-Overlay").click(function() {
+              $("cart-drawer.drawer").removeClass('active');
+            });
+          } else {
+            $("cart-drawer").html($(carthtml).find('cart-drawer').html());
+          }
+        }
+      });
+    }
+  });
+});
